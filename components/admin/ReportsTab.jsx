@@ -11,21 +11,106 @@ import {
   BarChart3,
   CalendarDays,
   CreditCard,
+  Edit3,
   Landmark,
   PackageCheck,
+  Plus,
+  ReceiptText,
+  Trash2,
+  TrendingDown,
   TrendingUp,
   Wallet,
+  X,
 } from "lucide-react";
 
 
+const EXPENSE_CATEGORIES = [
+  "Kira",
+  "Elektrik",
+  "Su",
+  "İnternet / Telefon",
+  "Personel",
+  "Reklam",
+  "POS Komisyonu",
+  "Sarf Malzeme",
+  "Kargo",
+  "Vergi / Harç",
+  "Bakım / Onarım",
+  "Diğer",
+];
+
+
+const PAYMENT_METHODS = [
+  "Nakit",
+  "Kart",
+  "Havale/EFT",
+  "Diğer",
+];
+
+
+function todayTurkey() {
+  return new Intl.DateTimeFormat(
+    "en-CA",
+    {
+      timeZone:
+        "Europe/Istanbul",
+
+      year:
+        "numeric",
+
+      month:
+        "2-digit",
+
+      day:
+        "2-digit",
+    }
+  ).format(
+    new Date()
+  );
+}
+
+
+const EMPTY_EXPENSE = {
+  id: "",
+  expense_date:
+    todayTurkey(),
+
+  category:
+    "Kira",
+
+  amount: "",
+
+  payment_method:
+    "Nakit",
+
+  description: "",
+};
+
+
 async function requestJson(
-  url
+  url,
+  options = {}
 ) {
   const response =
     await fetch(
       url,
       {
-        cache: "no-store",
+        ...options,
+
+        headers: {
+          ...(options.body
+            ? {
+                "Content-Type":
+                  "application/json",
+              }
+            : {}),
+
+          ...(options.headers ||
+            {}),
+        },
+
+        cache:
+          "no-store",
       }
     );
 
@@ -41,7 +126,7 @@ async function requestJson(
   if (!response.ok) {
     throw new Error(
       data.error ||
-        "Rapor alınamadı."
+        "İşlem başarısız."
     );
   }
 
@@ -53,18 +138,16 @@ async function requestJson(
 function formatMoney(
   value
 ) {
-  return (
-    `${new Intl.NumberFormat(
-      "tr-TR",
-      {
-        maximumFractionDigits: 0,
-      }
-    ).format(
-      Number(
-        value || 0
-      )
-    )} TL`
-  );
+  return `${new Intl.NumberFormat(
+    "tr-TR",
+    {
+      maximumFractionDigits: 0,
+    }
+  ).format(
+    Number(
+      value || 0
+    )
+  )} TL`;
 }
 
 
@@ -101,16 +184,14 @@ function statusClass(
   status
 ) {
   if (
-    status ===
-    "Ödendi"
+    status === "Ödendi"
   ) {
     return "green";
   }
 
 
   if (
-    status ===
-    "Kısmi"
+    status === "Kısmi"
   ) {
     return "orange";
   }
@@ -121,38 +202,11 @@ function statusClass(
 
 
 function currentMonth() {
-  const parts =
-    new Intl.DateTimeFormat(
-      "en-CA",
-      {
-        timeZone:
-          "Europe/Istanbul",
-
-        year: "numeric",
-        month: "2-digit",
-      }
-    ).formatToParts(
-      new Date()
+  return todayTurkey()
+    .slice(
+      0,
+      7
     );
-
-
-  const year =
-    parts.find(
-      (part) =>
-        part.type ===
-        "year"
-    )?.value;
-
-
-  const month =
-    parts.find(
-      (part) =>
-        part.type ===
-        "month"
-    )?.value;
-
-
-  return `${year}-${month}`;
 }
 
 
@@ -187,6 +241,29 @@ export default function ReportsTab({
     setError,
   ] =
     useState("");
+
+
+  const [
+    expenseModal,
+    setExpenseModal,
+  ] =
+    useState(false);
+
+
+  const [
+    expenseForm,
+    setExpenseForm,
+  ] =
+    useState({
+      ...EMPTY_EXPENSE,
+    });
+
+
+  const [
+    savingExpense,
+    setSavingExpense,
+  ] =
+    useState(false);
 
 
   useEffect(
@@ -224,6 +301,158 @@ export default function ReportsTab({
   }
 
 
+  function openNewExpense() {
+    setExpenseForm({
+      ...EMPTY_EXPENSE,
+
+      expense_date:
+        todayTurkey(),
+    });
+
+    setError("");
+
+    setExpenseModal(
+      true
+    );
+  }
+
+
+  function openEditExpense(
+    expense
+  ) {
+    setExpenseForm({
+      id:
+        expense.id,
+
+      expense_date:
+        expense.expense_date,
+
+      category:
+        expense.category,
+
+      amount:
+        expense.amount,
+
+      payment_method:
+        expense.payment_method,
+
+      description:
+        expense.description ||
+        "",
+    });
+
+
+    setError("");
+
+    setExpenseModal(
+      true
+    );
+  }
+
+
+  async function saveExpense(
+    event
+  ) {
+    event.preventDefault();
+
+    setSavingExpense(
+      true
+    );
+
+    setError("");
+
+
+    try {
+      await requestJson(
+        "/api/admin/expenses",
+        {
+          method:
+            "POST",
+
+          body:
+            JSON.stringify({
+              action:
+                expenseForm.id
+                  ? "update"
+                  : "create",
+
+              data:
+                expenseForm,
+            }),
+        }
+      );
+
+
+      setExpenseModal(
+        false
+      );
+
+
+      await loadReports();
+
+    } catch (err) {
+      setError(
+        err.message
+      );
+
+    } finally {
+      setSavingExpense(
+        false
+      );
+    }
+  }
+
+
+  async function deleteExpense(
+    expense
+  ) {
+    const confirmed =
+      window.confirm(
+        `${expense.category} - ${formatMoney(
+          expense.amount
+        )} gider kaydını silmek istiyor musunuz?`
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    setError("");
+
+
+    try {
+      await requestJson(
+        "/api/admin/expenses",
+        {
+          method:
+            "POST",
+
+          body:
+            JSON.stringify({
+              action:
+                "delete",
+
+              data: {
+                id:
+                  expense.id,
+              },
+            }),
+        }
+      );
+
+
+      await loadReports();
+
+    } catch (err) {
+      setError(
+        err.message
+      );
+    }
+  }
+
+
   const monthLabel =
     useMemo(
       () => {
@@ -239,8 +468,9 @@ export default function ReportsTab({
         const date =
           new Date(
             Number(year),
-            Number(monthNumber) -
-              1,
+            Number(
+              monthNumber
+            ) - 1,
             1
           );
 
@@ -248,10 +478,15 @@ export default function ReportsTab({
         return new Intl.DateTimeFormat(
           "tr-TR",
           {
-            month: "long",
-            year: "numeric",
+            month:
+              "long",
+
+            year:
+              "numeric",
           }
-        ).format(date);
+        ).format(
+          date
+        );
       },
       [month]
     );
@@ -262,6 +497,7 @@ export default function ReportsTab({
       todaySalesRevenue: 0,
       todayDeviceCount: 0,
       todayCollections: 0,
+      todayExpenseTotal: 0,
 
       monthRevenue: 0,
       monthDeviceCount: 0,
@@ -269,6 +505,9 @@ export default function ReportsTab({
 
       monthPurchaseCost: 0,
       monthGrossProfit: 0,
+
+      monthExpenseTotal: 0,
+      monthNetProfit: 0,
 
       totalReceivable: 0,
     };
@@ -290,37 +529,56 @@ export default function ReportsTab({
           </h1>
 
           <p>
-            Satış, tahsilat, alacak
-            ve brüt kâr durumunu takip edin.
+            Satış, tahsilat, gider,
+            alacak ve kâr durumunu takip edin.
           </p>
 
         </div>
 
 
-        <label className="reports-month-picker">
+        <div className="reports-head-actions">
 
-          <span>
-            Rapor Ayı
-          </span>
+          <label className="reports-month-picker">
 
-          <input
-            type="month"
-            value={month}
-            onChange={
-              (event) =>
-                setMonth(
-                  event.target.value
-                )
+            <span>
+              Rapor Ayı
+            </span>
+
+            <input
+              type="month"
+              value={month}
+              onChange={
+                (event) =>
+                  setMonth(
+                    event.target.value
+                  )
+              }
+            />
+
+          </label>
+
+
+          <button
+            type="button"
+            className="admin-primary-button"
+            onClick={
+              openNewExpense
             }
-          />
+          >
+            <Plus
+              size={17}
+            />
 
-        </label>
+            Gider Ekle
+          </button>
+
+        </div>
 
       </div>
 
 
       {error && (
-        <div className="admin-form-error">
+        <div className="admin-form-error reports-error">
           {error}
         </div>
       )}
@@ -412,6 +670,35 @@ export default function ReportsTab({
 
             <article className="reports-metric-card">
 
+              <span className="reports-metric-icon red">
+                <TrendingDown
+                  size={21}
+                />
+              </span>
+
+              <div>
+
+                <small>
+                  Bugünkü Gider
+                </small>
+
+                <strong>
+                  {formatMoney(
+                    metrics.todayExpenseTotal
+                  )}
+                </strong>
+
+                <p>
+                  Bugün girilen giderler
+                </p>
+
+              </div>
+
+            </article>
+
+
+            <article className="reports-metric-card">
+
               <span className="reports-metric-icon orange">
                 <Wallet
                   size={21}
@@ -454,7 +741,7 @@ export default function ReportsTab({
           </div>
 
 
-          <div className="reports-metric-grid">
+          <div className="reports-metric-grid reports-profit-grid">
 
             <article className="reports-metric-card">
 
@@ -478,7 +765,7 @@ export default function ReportsTab({
 
                 <p>
                   {metrics.monthDeviceCount}
-                  {" "}cihaz satışı
+                  {" "}cihaz
                 </p>
 
               </div>
@@ -536,7 +823,7 @@ export default function ReportsTab({
                 </strong>
 
                 <p>
-                  Satılan cihazların alış maliyeti
+                  Satılan cihazların maliyeti
                 </p>
 
               </div>
@@ -565,7 +852,72 @@ export default function ReportsTab({
                 </strong>
 
                 <p>
-                  Ciro - cihaz maliyeti
+                  Ciro - ürün maliyeti
+                </p>
+
+              </div>
+
+            </article>
+
+
+            <article className="reports-metric-card">
+
+              <span className="reports-metric-icon red">
+                <ReceiptText
+                  size={21}
+                />
+              </span>
+
+              <div>
+
+                <small>
+                  Aylık Gider
+                </small>
+
+                <strong>
+                  {formatMoney(
+                    metrics.monthExpenseTotal
+                  )}
+                </strong>
+
+                <p>
+                  Kayıtlı işletme giderleri
+                </p>
+
+              </div>
+
+            </article>
+
+
+            <article className="reports-metric-card reports-net-profit-card">
+
+              <span className="reports-metric-icon dark">
+                <Wallet
+                  size={21}
+                />
+              </span>
+
+              <div>
+
+                <small>
+                  Net Kâr
+                </small>
+
+                <strong
+                  className={
+                    metrics.monthNetProfit <
+                    0
+                      ? "reports-negative"
+                      : ""
+                  }
+                >
+                  {formatMoney(
+                    metrics.monthNetProfit
+                  )}
+                </strong>
+
+                <p>
+                  Brüt kâr - kayıtlı giderler
                 </p>
 
               </div>
@@ -684,6 +1036,68 @@ export default function ReportsTab({
 
                 <div className="admin-card-title">
 
+                  <ReceiptText
+                    size={19}
+                  />
+
+                  <strong>
+                    Gider Dağılımı
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              {(data?.expenseCategories || []).length ===
+              0 ? (
+
+                <div className="admin-empty">
+                  Bu ay gider kaydı yok.
+                </div>
+
+              ) : (
+
+                <div className="reports-payment-list">
+
+                  {data.expenseCategories.map(
+                    (item) => (
+
+                      <div
+                        className="reports-payment-row"
+                        key={
+                          item.category
+                        }
+                      >
+
+                        <span>
+                          {item.category}
+                        </span>
+
+                        <strong>
+                          {formatMoney(
+                            item.amount
+                          )}
+                        </strong>
+
+                      </div>
+
+                    )
+                  )}
+
+                </div>
+
+              )}
+
+            </section>
+
+
+            <section className="admin-card">
+
+              <div className="admin-card-head">
+
+                <div className="admin-card-title">
+
                   <Landmark
                     size={19}
                   />
@@ -729,6 +1143,192 @@ export default function ReportsTab({
             </section>
 
           </div>
+
+
+          <section className="admin-card reports-expenses-card">
+
+            <div className="admin-card-head">
+
+              <div className="admin-card-title">
+
+                <ReceiptText
+                  size={19}
+                />
+
+                <strong>
+                  {monthLabel} Giderleri
+                </strong>
+
+              </div>
+
+
+              <button
+                type="button"
+                className="admin-small-primary"
+                onClick={
+                  openNewExpense
+                }
+              >
+                <Plus
+                  size={16}
+                />
+
+                Gider Ekle
+              </button>
+
+            </div>
+
+
+            {(data?.expenses || []).length ===
+            0 ? (
+
+              <div className="admin-empty">
+                Seçilen ayda gider kaydı yok.
+              </div>
+
+            ) : (
+
+              <div className="admin-table-wrap">
+
+                <table className="admin-table large">
+
+                  <thead>
+
+                    <tr>
+
+                      <th>
+                        Tarih
+                      </th>
+
+                      <th>
+                        Kategori
+                      </th>
+
+                      <th>
+                        Açıklama
+                      </th>
+
+                      <th>
+                        Ödeme
+                      </th>
+
+                      <th>
+                        Tutar
+                      </th>
+
+                      <th>
+                        İşlem
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+                    {data.expenses.map(
+                      (expense) => (
+
+                        <tr
+                          key={
+                            expense.id
+                          }
+                        >
+
+                          <td>
+                            {formatDate(
+                              expense.expense_date
+                            )}
+                          </td>
+
+
+                          <td>
+
+                            <strong>
+                              {expense.category}
+                            </strong>
+
+                          </td>
+
+
+                          <td>
+                            {expense.description ||
+                              "—"}
+                          </td>
+
+
+                          <td>
+                            {expense.payment_method}
+                          </td>
+
+
+                          <td>
+
+                            <strong>
+                              {formatMoney(
+                                expense.amount
+                              )}
+                            </strong>
+
+                          </td>
+
+
+                          <td>
+
+                            <div className="admin-row-actions">
+
+                              <button
+                                type="button"
+                                className="admin-icon-button"
+                                onClick={
+                                  () =>
+                                    openEditExpense(
+                                      expense
+                                    )
+                                }
+                                title="Gideri düzenle"
+                              >
+                                <Edit3
+                                  size={16}
+                                />
+                              </button>
+
+
+                              <button
+                                type="button"
+                                className="admin-icon-button reports-delete-button"
+                                onClick={
+                                  () =>
+                                    deleteExpense(
+                                      expense
+                                    )
+                                }
+                                title="Gideri sil"
+                              >
+                                <Trash2
+                                  size={16}
+                                />
+                              </button>
+
+                            </div>
+
+                          </td>
+
+                        </tr>
+
+                      )
+                    )}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            )}
+
+          </section>
 
 
           <section className="admin-card reports-sales-card">
@@ -875,11 +1475,13 @@ export default function ReportsTab({
 
 
                           <td>
+
                             <strong>
                               {formatMoney(
                                 sale.sale_price
                               )}
                             </strong>
+
                           </td>
 
 
@@ -891,6 +1493,7 @@ export default function ReportsTab({
 
 
                           <td>
+
                             <strong
                               className={
                                 sale.gross_profit <
@@ -903,6 +1506,7 @@ export default function ReportsTab({
                                 sale.gross_profit
                               )}
                             </strong>
+
                           </td>
 
 
@@ -950,6 +1554,284 @@ export default function ReportsTab({
           </section>
 
         </>
+
+      )}
+
+
+      {expenseModal && (
+
+        <div
+          className="admin-modal-backdrop"
+          onMouseDown={
+            () =>
+              setExpenseModal(
+                false
+              )
+          }
+        >
+
+          <section
+            className="admin-modal reports-expense-modal"
+            onMouseDown={
+              (event) =>
+                event.stopPropagation()
+            }
+          >
+
+            <header className="admin-modal-head">
+
+              <div>
+
+                <h2>
+                  {expenseForm.id
+                    ? "Gideri Düzenle"
+                    : "Yeni Gider Ekle"}
+                </h2>
+
+                <p>
+                  İşletme giderini kasa raporuna ekleyin.
+                </p>
+
+              </div>
+
+
+              <button
+                type="button"
+                onClick={
+                  () =>
+                    setExpenseModal(
+                      false
+                    )
+                }
+              >
+                <X
+                  size={20}
+                />
+              </button>
+
+            </header>
+
+
+            <form
+              className="admin-form"
+              onSubmit={
+                saveExpense
+              }
+            >
+
+              <div className="admin-form-grid">
+
+                <label className="admin-field">
+
+                  <span>
+                    Gider Tarihi
+                  </span>
+
+                  <input
+                    type="date"
+                    value={
+                      expenseForm.expense_date
+                    }
+                    onChange={
+                      (event) =>
+                        setExpenseForm({
+                          ...expenseForm,
+
+                          expense_date:
+                            event.target.value,
+                        })
+                    }
+                    required
+                  />
+
+                </label>
+
+
+                <label className="admin-field">
+
+                  <span>
+                    Kategori
+                  </span>
+
+                  <select
+                    value={
+                      expenseForm.category
+                    }
+                    onChange={
+                      (event) =>
+                        setExpenseForm({
+                          ...expenseForm,
+
+                          category:
+                            event.target.value,
+                        })
+                    }
+                  >
+
+                    {EXPENSE_CATEGORIES.map(
+                      (category) => (
+
+                        <option
+                          key={
+                            category
+                          }
+                          value={
+                            category
+                          }
+                        >
+                          {category}
+                        </option>
+
+                      )
+                    )}
+
+                  </select>
+
+                </label>
+
+
+                <label className="admin-field">
+
+                  <span>
+                    Tutar
+                  </span>
+
+                  <input
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={
+                      expenseForm.amount
+                    }
+                    onChange={
+                      (event) =>
+                        setExpenseForm({
+                          ...expenseForm,
+
+                          amount:
+                            event.target.value,
+                        })
+                    }
+                    placeholder="Örn. 12500"
+                    required
+                  />
+
+                </label>
+
+
+                <label className="admin-field">
+
+                  <span>
+                    Ödeme Yöntemi
+                  </span>
+
+                  <select
+                    value={
+                      expenseForm.payment_method
+                    }
+                    onChange={
+                      (event) =>
+                        setExpenseForm({
+                          ...expenseForm,
+
+                          payment_method:
+                            event.target.value,
+                        })
+                    }
+                  >
+
+                    {PAYMENT_METHODS.map(
+                      (method) => (
+
+                        <option
+                          key={
+                            method
+                          }
+                          value={
+                            method
+                          }
+                        >
+                          {method}
+                        </option>
+
+                      )
+                    )}
+
+                  </select>
+
+                </label>
+
+
+                <label className="admin-field full">
+
+                  <span>
+                    Açıklama
+                  </span>
+
+                  <textarea
+                    rows={4}
+                    value={
+                      expenseForm.description
+                    }
+                    onChange={
+                      (event) =>
+                        setExpenseForm({
+                          ...expenseForm,
+
+                          description:
+                            event.target.value,
+                        })
+                    }
+                    placeholder="Örn. Eylül ayı dükkan kirası"
+                  />
+
+                </label>
+
+              </div>
+
+
+              {error && (
+                <div className="admin-form-error">
+                  {error}
+                </div>
+              )}
+
+
+              <div className="admin-form-actions">
+
+                <button
+                  type="button"
+                  className="admin-cancel-button"
+                  onClick={
+                    () =>
+                      setExpenseModal(
+                        false
+                      )
+                  }
+                >
+                  Vazgeç
+                </button>
+
+
+                <button
+                  type="submit"
+                  className="admin-primary-button"
+                  disabled={
+                    savingExpense
+                  }
+                >
+                  {savingExpense
+                    ? "Kaydediliyor..."
+                    : "Gideri Kaydet"}
+                </button>
+
+              </div>
+
+            </form>
+
+          </section>
+
+        </div>
 
       )}
 

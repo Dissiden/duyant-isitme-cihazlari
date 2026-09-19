@@ -1,4 +1,6 @@
-import { NextResponse } from "next/server";
+import {
+  NextResponse,
+} from "next/server";
 
 import {
   isAdminAuthenticated,
@@ -12,7 +14,8 @@ import {
 function unauthorized() {
   return NextResponse.json(
     {
-      error: "Yetkisiz erişim.",
+      error:
+        "Yetkisiz erişim.",
     },
     {
       status: 401,
@@ -28,9 +31,14 @@ function getTurkeyToday() {
       timeZone:
         "Europe/Istanbul",
 
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
+      year:
+        "numeric",
+
+      month:
+        "2-digit",
+
+      day:
+        "2-digit",
     }
   ).format(
     new Date()
@@ -42,7 +50,9 @@ function validMonth(
   value
 ) {
   return /^\d{4}-\d{2}$/.test(
-    String(value || "")
+    String(
+      value || ""
+    )
   );
 }
 
@@ -51,7 +61,10 @@ function number(
   value
 ) {
   const result =
-    Number(value || 0);
+    Number(
+      value || 0
+    );
+
 
   return Number.isFinite(
     result
@@ -67,7 +80,8 @@ function paymentStatus(
 ) {
   if (
     salePrice > 0 &&
-    totalPaid >= salePrice
+    totalPaid >=
+      salePrice
   ) {
     return "Ödendi";
   }
@@ -126,6 +140,7 @@ export async function GET(
       patients,
       payments,
       inventory,
+      expenses,
     ] =
       await Promise.all([
         supabaseRest(
@@ -138,6 +153,10 @@ export async function GET(
 
         supabaseRest(
           "inventory?select=id,brand,product_name,category,stock_quantity,purchase_price&limit=5000"
+        ),
+
+        supabaseRest(
+          "expenses?select=id,expense_date,category,amount,payment_method,description,created_at&order=expense_date.desc,created_at.desc&limit=10000"
         ),
       ]);
 
@@ -152,6 +171,10 @@ export async function GET(
 
     const allInventory =
       inventory || [];
+
+
+    const allExpenses =
+      expenses || [];
 
 
     const inventoryMap =
@@ -229,6 +252,26 @@ export async function GET(
       );
 
 
+    const todayExpenses =
+      allExpenses.filter(
+        (expense) =>
+          expense.expense_date ===
+          today
+      );
+
+
+    const monthExpenses =
+      allExpenses.filter(
+        (expense) =>
+          String(
+            expense.expense_date ||
+              ""
+          ).startsWith(
+            month
+          )
+      );
+
+
     const todaySalesRevenue =
       todayPatients.reduce(
         (sum, patient) =>
@@ -258,6 +301,17 @@ export async function GET(
           sum +
           number(
             payment.amount
+          ),
+        0
+      );
+
+
+    const todayExpenseTotal =
+      todayExpenses.reduce(
+        (sum, expense) =>
+          sum +
+          number(
+            expense.amount
           ),
         0
       );
@@ -313,7 +367,24 @@ export async function GET(
       monthPurchaseCost;
 
 
-    let totalReceivable = 0;
+    const monthExpenseTotal =
+      monthExpenses.reduce(
+        (sum, expense) =>
+          sum +
+          number(
+            expense.amount
+          ),
+        0
+      );
+
+
+    const monthNetProfit =
+      monthGrossProfit -
+      monthExpenseTotal;
+
+
+    let totalReceivable =
+      0;
 
 
     for (
@@ -494,6 +565,53 @@ export async function GET(
       );
 
 
+    const expenseCategoryMap =
+      new Map();
+
+
+    for (
+      const expense
+      of monthExpenses
+    ) {
+      const category =
+        expense.category ||
+        "Diğer";
+
+
+      expenseCategoryMap.set(
+        category,
+        (
+          expenseCategoryMap.get(
+            category
+          ) || 0
+        ) +
+          number(
+            expense.amount
+          )
+      );
+    }
+
+
+    const expenseCategories =
+      Array.from(
+        expenseCategoryMap.entries()
+      )
+        .map(
+          ([
+            category,
+            amount,
+          ]) => ({
+            category,
+            amount,
+          })
+        )
+        .sort(
+          (a, b) =>
+            b.amount -
+            a.amount
+        );
+
+
     const sales =
       monthPatients.map(
         (patient) => {
@@ -595,10 +713,12 @@ export async function GET(
     sales.sort(
       (a, b) =>
         String(
-          b.purchase_date || ""
+          b.purchase_date ||
+            ""
         ).localeCompare(
           String(
-            a.purchase_date || ""
+            a.purchase_date ||
+              ""
           )
         )
     );
@@ -614,6 +734,7 @@ export async function GET(
         todaySalesRevenue,
         todayDeviceCount,
         todayCollections,
+        todayExpenseTotal,
 
         monthRevenue,
         monthDeviceCount,
@@ -622,12 +743,20 @@ export async function GET(
         monthPurchaseCost,
         monthGrossProfit,
 
+        monthExpenseTotal,
+        monthNetProfit,
+
         totalReceivable,
       },
 
       brands,
 
       paymentMethods,
+
+      expenseCategories,
+
+      expenses:
+        monthExpenses,
 
       sales,
     });
