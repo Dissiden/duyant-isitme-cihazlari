@@ -18,15 +18,18 @@ const REPAIR_STATUSES = [
   "Teslim Edildi",
 ];
 
+
 const REPORT_STATUSES = [
   "Raporlu",
   "Raporsuz",
 ];
 
+
 const INSTITUTION_STATUSES = [
   "Kurumlu",
   "Kurumsuz",
 ];
+
 
 const DEVICE_SIDES = [
   "",
@@ -35,11 +38,13 @@ const DEVICE_SIDES = [
   "Çift",
 ];
 
+
 const POWER_TYPES = [
   "",
   "Pilli",
   "Şarjlı",
 ];
+
 
 const BATTERY_SIZES = [
   "",
@@ -49,12 +54,14 @@ const BATTERY_SIZES = [
   "675",
 ];
 
+
 const PAYMENT_METHODS = [
   "Nakit",
   "Kart",
   "Havale/EFT",
   "Diğer",
 ];
+
 
 const APPOINTMENT_TYPES = [
   "Kontrol",
@@ -64,6 +71,7 @@ const APPOINTMENT_TYPES = [
   "Telefon Görüşmesi",
   "Diğer",
 ];
+
 
 const APPOINTMENT_STATUSES = [
   "Planlandı",
@@ -89,10 +97,14 @@ function includesText(
   search
 ) {
   return String(value || "")
-    .toLocaleLowerCase("tr-TR")
+    .toLocaleLowerCase(
+      "tr-TR"
+    )
     .includes(
       String(search || "")
-        .toLocaleLowerCase("tr-TR")
+        .toLocaleLowerCase(
+          "tr-TR"
+        )
     );
 }
 
@@ -126,8 +138,10 @@ function sameLocalDay(
     return false;
   }
 
+
   const date =
     new Date(value);
+
 
   if (
     Number.isNaN(
@@ -137,18 +151,23 @@ function sameLocalDay(
     return false;
   }
 
+
   return (
     date.getFullYear() ===
       today.getFullYear() &&
+
     date.getMonth() ===
       today.getMonth() &&
+
     date.getDate() ===
       today.getDate()
   );
 }
 
 
-function isHearingDevice(row) {
+function isHearingDevice(
+  row
+) {
   return (
     String(
       row.category || ""
@@ -170,12 +189,15 @@ async function getPatients(
       "patients?select=*&order=created_at.desc&limit=1000"
     );
 
+
   if (!search) {
     return rows || [];
   }
 
+
   const q =
     search.trim();
+
 
   const numeric =
     q.replace(
@@ -183,13 +205,13 @@ async function getPatients(
       ""
     );
 
+
   return (rows || []).filter(
     (row) =>
       (
         numeric &&
         String(
-          row.tc_identity ||
-            ""
+          row.tc_identity || ""
         ).includes(
           numeric
         )
@@ -241,12 +263,15 @@ async function getRepairs(
       "repairs?select=*&order=created_at.desc&limit=1000"
     );
 
+
   if (!search) {
     return rows || [];
   }
 
+
   const q =
     search.trim();
+
 
   const numeric =
     q.replace(
@@ -254,13 +279,13 @@ async function getRepairs(
       ""
     );
 
+
   return (rows || []).filter(
     (row) =>
       (
         numeric &&
         String(
-          row.tc_identity ||
-            ""
+          row.tc_identity || ""
         ).includes(
           numeric
         )
@@ -297,12 +322,15 @@ async function getInventory(
       "inventory?select=*&order=updated_at.desc&limit=1000"
     );
 
+
   if (!search) {
     return rows || [];
   }
 
+
   const q =
     search.trim();
+
 
   return (rows || []).filter(
     (row) =>
@@ -327,8 +355,9 @@ async function getInventory(
 async function getDeviceOptions() {
   const rows =
     await supabaseRest(
-      "inventory?select=id,product_name,brand,category,stock_quantity,minimum_stock&order=brand.asc,product_name.asc&limit=1000"
+      "inventory?select=id,product_name,brand,category,stock_quantity,minimum_stock,purchase_price&order=brand.asc,product_name.asc&limit=1000"
     );
+
 
   return (rows || [])
     .filter(
@@ -346,6 +375,7 @@ async function getPatientById(
         id
       )}&limit=1`
     );
+
 
   return rows?.[0] ||
     null;
@@ -401,6 +431,7 @@ function financialSummary(
         0
     );
 
+
   const totalPaid =
     payments.reduce(
       (sum, payment) =>
@@ -412,6 +443,7 @@ function financialSummary(
       0
     );
 
+
   const remaining =
     Math.max(
       salePrice -
@@ -419,8 +451,10 @@ function financialSummary(
       0
     );
 
+
   let status =
     "Bekliyor";
+
 
   if (
     salePrice > 0 &&
@@ -428,12 +462,14 @@ function financialSummary(
   ) {
     status =
       "Ödendi";
+
   } else if (
     totalPaid > 0
   ) {
     status =
       "Kısmi";
   }
+
 
   return {
     salePrice,
@@ -448,17 +484,21 @@ async function getPatientProfile(
   patientId
 ) {
   if (
-    !isUuid(patientId)
+    !isUuid(
+      patientId
+    )
   ) {
     throw new Error(
       "Hasta ID geçersiz."
     );
   }
 
+
   const patient =
     await getPatientById(
       patientId
     );
+
 
   if (!patient) {
     throw new Error(
@@ -466,24 +506,31 @@ async function getPatientProfile(
     );
   }
 
+
   const [
     payments,
     appointments,
     repairs,
   ] =
     await Promise.all([
-      getPayments(patientId),
-      getAppointments(patientId),
-      getPatientRepairs(patientId),
+      getPayments(
+        patientId
+      ),
+
+      getAppointments(
+        patientId
+      ),
+
+      getPatientRepairs(
+        patientId
+      ),
     ]);
+
 
   return {
     patient,
-
     payments,
-
     appointments,
-
     repairs,
 
     financial:
@@ -530,12 +577,10 @@ async function getSummary() {
     inventory.filter(
       (row) =>
         Number(
-          row.stock_quantity ||
-            0
+          row.stock_quantity || 0
         ) <=
         Number(
-          row.minimum_stock ||
-            0
+          row.minimum_stock || 0
         )
     );
 
@@ -553,12 +598,12 @@ async function getSummary() {
         payment.patient_id
       ) || 0;
 
+
     paymentsByPatient.set(
       payment.patient_id,
       current +
         Number(
-          payment.amount ||
-            0
+          payment.amount || 0
         )
     );
   }
@@ -569,14 +614,15 @@ async function getSummary() {
       (sum, patient) => {
         const sale =
           Number(
-            patient.sale_price ||
-              0
+            patient.sale_price || 0
           );
+
 
         const paid =
           paymentsByPatient.get(
             patient.id
           ) || 0;
+
 
         return (
           sum +
@@ -593,6 +639,7 @@ async function getSummary() {
   const now =
     new Date();
 
+
   const today =
     new Date();
 
@@ -603,6 +650,7 @@ async function getSummary() {
         (row) =>
           row.status ===
             "Planlandı" &&
+
           sameLocalDay(
             row.appointment_at,
             today
@@ -610,24 +658,9 @@ async function getSummary() {
       );
 
 
-  const upcomingAppointments =
-    (appointments || [])
-      .filter(
-        (row) =>
-          row.status ===
-            "Planlandı" &&
-          new Date(
-            row.appointment_at
-          ) >= now
-      )
-      .slice(
-        0,
-        6
-      );
-
-
   const warrantyLimit =
     new Date();
+
 
   warrantyLimit.setDate(
     warrantyLimit.getDate() +
@@ -644,10 +677,12 @@ async function getSummary() {
           return false;
         }
 
+
         const end =
           new Date(
             `${patient.warranty_end_date}T23:59:59`
           );
+
 
         return (
           end >= now &&
@@ -696,8 +731,6 @@ async function getSummary() {
         5
       ),
 
-    upcomingAppointments,
-
     warrantyExpiring:
       warrantyExpiring.slice(
         0,
@@ -716,11 +749,13 @@ export async function GET(
     return unauthorized();
   }
 
+
   try {
     const url =
       new URL(
         request.url
       );
+
 
     const resource =
       cleanText(
@@ -730,6 +765,7 @@ export async function GET(
         50
       );
 
+
     const search =
       cleanText(
         url.searchParams.get(
@@ -737,6 +773,7 @@ export async function GET(
         ),
         160
       );
+
 
     const id =
       cleanText(
@@ -748,8 +785,7 @@ export async function GET(
 
 
     if (
-      resource ===
-      "summary"
+      resource === "summary"
     ) {
       return NextResponse.json(
         await getSummary()
@@ -758,8 +794,7 @@ export async function GET(
 
 
     if (
-      resource ===
-      "patients"
+      resource === "patients"
     ) {
       return NextResponse.json({
         rows:
@@ -771,8 +806,7 @@ export async function GET(
 
 
     if (
-      resource ===
-      "repairs"
+      resource === "repairs"
     ) {
       return NextResponse.json({
         rows:
@@ -784,8 +818,7 @@ export async function GET(
 
 
     if (
-      resource ===
-      "inventory"
+      resource === "inventory"
     ) {
       return NextResponse.json({
         rows:
@@ -1171,8 +1204,7 @@ async function savePatient(
 
 
   if (
-    action ===
-    "create"
+    action === "create"
   ) {
     return await supabaseRest(
       "rpc/admin_create_patient_with_stock",
@@ -1279,6 +1311,7 @@ async function repairPayload(
         )}&limit=1`
       );
 
+
     patientId =
       patients?.[0]?.id ||
       null;
@@ -1380,6 +1413,18 @@ function inventoryPayload(
     );
 
 
+  const purchasePrice =
+    Number(
+      String(
+        data.purchase_price ??
+          "0"
+      ).replace(
+        ",",
+        "."
+      )
+    );
+
+
   if (
     !Number.isInteger(
       stockQuantity
@@ -1404,6 +1449,18 @@ function inventoryPayload(
   }
 
 
+  if (
+    !Number.isFinite(
+      purchasePrice
+    ) ||
+    purchasePrice < 0
+  ) {
+    throw new Error(
+      "Alış fiyatı geçersiz."
+    );
+  }
+
+
   return {
     product_name:
       productName,
@@ -1417,6 +1474,9 @@ function inventoryPayload(
 
     minimum_stock:
       minimumStock,
+
+    purchase_price:
+      purchasePrice,
 
     notes:
       cleanText(
@@ -1438,7 +1498,9 @@ async function createPayment(
 
 
   if (
-    !isUuid(patientId)
+    !isUuid(
+      patientId
+    )
   ) {
     throw new Error(
       "Hasta seçimi geçersiz."
@@ -1449,8 +1511,7 @@ async function createPayment(
   const amount =
     Number(
       String(
-        data.amount ??
-          ""
+        data.amount ?? ""
       ).replace(
         ",",
         "."
@@ -1559,7 +1620,9 @@ async function saveAppointment(
 
 
   if (
-    !isUuid(patientId)
+    !isUuid(
+      patientId
+    )
   ) {
     throw new Error(
       "Hasta seçimi geçersiz."
@@ -1651,8 +1714,7 @@ async function saveAppointment(
 
 
   if (
-    action ===
-    "create"
+    action === "create"
   ) {
     const rows =
       await supabaseRest(
@@ -1668,6 +1730,7 @@ async function saveAppointment(
         }
       );
 
+
     return rows?.[0] ||
       null;
   }
@@ -1681,7 +1744,9 @@ async function saveAppointment(
 
 
   if (
-    !isUuid(id)
+    !isUuid(
+      id
+    )
   ) {
     throw new Error(
       "Randevu ID geçersiz."
@@ -1719,7 +1784,7 @@ function mapDatabaseError(
       "OUT_OF_STOCK"
     )
   ) {
-    return "Seçilen cihazın stoğu kalmamış.";
+    return "Seçilen cihaz için yeterli stok yok.";
   }
 
 
@@ -1788,13 +1853,11 @@ export async function POST(
 
 
     const data =
-      body.data ||
-      {};
+      body.data || {};
 
 
     if (
-      resource ===
-      "patients"
+      resource === "patients"
     ) {
       const rows =
         await savePatient(
@@ -1821,8 +1884,7 @@ export async function POST(
 
 
     if (
-      resource ===
-      "payments"
+      resource === "payments"
     ) {
       const row =
         await createPayment(
@@ -1842,8 +1904,7 @@ export async function POST(
 
 
     if (
-      resource ===
-      "appointments"
+      resource === "appointments"
     ) {
       const row =
         await saveAppointment(
@@ -1868,8 +1929,7 @@ export async function POST(
 
 
     if (
-      resource ===
-      "repairs"
+      resource === "repairs"
     ) {
       const payload =
         await repairPayload(
@@ -1878,8 +1938,7 @@ export async function POST(
 
 
       if (
-        action ===
-        "create"
+        action === "create"
       ) {
         const rows =
           await supabaseRest(
@@ -1918,7 +1977,9 @@ export async function POST(
 
 
       if (
-        !isUuid(id)
+        !isUuid(
+          id
+        )
       ) {
         throw new Error(
           "Tamir kayıt ID'si geçersiz."
@@ -1953,8 +2014,7 @@ export async function POST(
 
 
     if (
-      resource ===
-      "inventory"
+      resource === "inventory"
     ) {
       const payload =
         inventoryPayload(
@@ -1963,8 +2023,7 @@ export async function POST(
 
 
       if (
-        action ===
-        "create"
+        action === "create"
       ) {
         const rows =
           await supabaseRest(
@@ -2003,7 +2062,9 @@ export async function POST(
 
 
       if (
-        !isUuid(id)
+        !isUuid(
+          id
+        )
       ) {
         throw new Error(
           "Envanter kayıt ID'si geçersiz."

@@ -1,0 +1,456 @@
+/* =========================================================
+   DUYANT - KASA / RAPORLAR
+   ========================================================= */
+
+.reports-page-head {
+  align-items: flex-end;
+}
+
+
+.reports-month-picker {
+  display: grid;
+  gap: 6px;
+}
+
+
+.reports-month-picker span {
+  color: #65748a;
+
+  font-size: .66rem;
+  font-weight: 750;
+}
+
+
+.reports-month-picker input {
+  min-width: 170px;
+  height: 42px;
+
+  padding: 0 12px;
+
+  border:
+    1px solid
+    #dce4ee;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  color: #17263c;
+  background: white;
+
+  font: inherit;
+
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+
+.reports-month-picker input:focus {
+  border-color: #1d73e8;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      29,
+      115,
+      232,
+      .08
+    );
+}
+
+
+.reports-today-title,
+.reports-period-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin:
+    2px 0 11px;
+
+  color: #435671;
+
+  font-size: .78rem;
+}
+
+
+.reports-period-title {
+  margin-top: 22px;
+}
+
+
+.reports-metric-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 13px;
+}
+
+
+.reports-metric-grid-today {
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(
+        0,
+        1fr
+      )
+    );
+}
+
+
+.reports-metric-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  min-width: 0;
+
+  padding: 18px;
+
+  border:
+    1px solid
+    #e0e6ee;
+
+  border-radius: 14px;
+
+  background: white;
+}
+
+
+.reports-metric-icon {
+  width: 44px;
+  height: 44px;
+
+  flex:
+    0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 13px;
+}
+
+
+.reports-metric-icon.blue {
+  color: #1d73e8;
+  background: #eaf3ff;
+}
+
+
+.reports-metric-icon.green {
+  color: #0b9767;
+  background: #e8f8f1;
+}
+
+
+.reports-metric-icon.orange {
+  color: #e69319;
+  background: #fff4df;
+}
+
+
+.reports-metric-icon.purple {
+  color: #7957db;
+  background: #f0ebff;
+}
+
+
+.reports-metric-icon.teal {
+  color: #008b8b;
+  background: #e6f8f8;
+}
+
+
+.reports-metric-card small {
+  display: block;
+
+  color: #718096;
+
+  font-size: .63rem;
+  font-weight: 700;
+}
+
+
+.reports-metric-card strong {
+  display: block;
+
+  margin-top: 4px;
+
+  overflow-wrap: anywhere;
+
+  color: #17263c;
+
+  font-size: 1.12rem;
+}
+
+
+.reports-metric-card p {
+  margin:
+    4px 0 0;
+
+  color: #8a97a9;
+
+  font-size: .61rem;
+}
+
+
+.reports-two-column {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 15px;
+
+  margin-top: 17px;
+}
+
+
+.reports-brand-list {
+  display: grid;
+  gap: 10px;
+}
+
+
+.reports-brand-card {
+  padding: 14px;
+
+  border:
+    1px solid
+    #e7ebf0;
+
+  border-radius: 11px;
+
+  background: #fafbfd;
+}
+
+
+.reports-brand-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+
+.reports-brand-head strong {
+  color: #1c2b40;
+
+  font-size: .78rem;
+}
+
+
+.reports-brand-head span {
+  padding:
+    4px 8px;
+
+  border-radius: 7px;
+
+  color: #1d73e8;
+
+  background: #eaf3ff;
+
+  font-size: .61rem;
+  font-weight: 800;
+}
+
+
+.reports-brand-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 8px;
+
+  margin-top: 11px;
+}
+
+
+.reports-brand-stats div {
+  padding: 9px;
+
+  border-radius: 8px;
+
+  background: white;
+}
+
+
+.reports-brand-stats small {
+  display: block;
+
+  color: #8290a3;
+
+  font-size: .58rem;
+}
+
+
+.reports-brand-stats strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #26374e;
+
+  font-size: .7rem;
+}
+
+
+.reports-payment-list {
+  display: grid;
+}
+
+
+.reports-payment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  min-height: 47px;
+
+  border-bottom:
+    1px solid
+    #edf0f4;
+}
+
+
+.reports-payment-row:last-child {
+  border-bottom: 0;
+}
+
+
+.reports-payment-row span {
+  color: #607087;
+
+  font-size: .7rem;
+}
+
+
+.reports-payment-row strong {
+  color: #17263c;
+
+  font-size: .74rem;
+}
+
+
+.reports-sales-card {
+  margin-top: 16px;
+}
+
+
+.reports-sale-count {
+  color: #7d8999;
+
+  font-size: .64rem;
+  font-weight: 700;
+}
+
+
+.reports-sales-table th,
+.reports-sales-table td {
+  white-space: nowrap;
+}
+
+
+.reports-positive {
+  color: #087f55;
+}
+
+
+.reports-negative {
+  color: #c74646;
+}
+
+
+@media (
+  max-width: 1100px
+) {
+  .reports-metric-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+
+
+  .reports-metric-grid-today {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+}
+
+
+@media (
+  max-width: 850px
+) {
+  .reports-two-column {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .reports-metric-grid-today {
+    grid-template-columns:
+      1fr;
+  }
+}
+
+
+@media (
+  max-width: 650px
+) {
+  .reports-page-head {
+    align-items: stretch;
+  }
+
+
+  .reports-month-picker input {
+    width: 100%;
+  }
+
+
+  .reports-metric-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .reports-brand-stats {
+    grid-template-columns:
+      1fr;
+  }
+}

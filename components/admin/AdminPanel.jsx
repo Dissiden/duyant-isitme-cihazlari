@@ -8,6 +8,7 @@ import {
 
 import {
   AlertTriangle,
+  BarChart3,
   Box,
   CalendarDays,
   Edit3,
@@ -29,6 +30,7 @@ import {
 import PatientProfileModal from "@/components/admin/PatientProfileModal";
 import AppointmentsTab from "@/components/admin/AppointmentsTab";
 import TodayAppointmentsCard from "@/components/admin/TodayAppointmentsCard";
+import ReportsTab from "@/components/admin/ReportsTab";
 
 
 const EMPTY_PATIENT = {
@@ -82,6 +84,7 @@ const EMPTY_INVENTORY = {
   category: "İşitme Cihazı",
   stock_quantity: 0,
   minimum_stock: 1,
+  purchase_price: "",
   notes: "",
 };
 
@@ -140,6 +143,12 @@ const TABS = [
     id: "inventory",
     label: "Envanter / Stok",
     icon: Box,
+  },
+
+  {
+    id: "reports",
+    label: "Kasa / Raporlar",
+    icon: BarChart3,
   },
 ];
 
@@ -249,14 +258,12 @@ function formatPrice(
   }
 
 
-  return new Intl.NumberFormat(
+  return `${new Intl.NumberFormat(
     "tr-TR",
     {
-      style: "currency",
-      currency: "TRY",
       maximumFractionDigits: 0,
     }
-  ).format(number);
+  ).format(number)} TL`;
 }
 
 
@@ -1243,6 +1250,33 @@ function Dashboard({
 
             </button>
 
+
+            <button
+              type="button"
+              onClick={
+                () =>
+                  setTab(
+                    "reports"
+                  )
+              }
+            >
+
+              <BarChart3 size={24} />
+
+              <span>
+
+                <strong>
+                  Kasa / Raporlar
+                </strong>
+
+                <small>
+                  Ciro, tahsilat ve kâr
+                </small>
+
+              </span>
+
+            </button>
+
           </div>
 
         </section>
@@ -1427,7 +1461,8 @@ export default function AdminPanel() {
     () => {
       if (
         tab !== "dashboard" &&
-        tab !== "appointments"
+        tab !== "appointments" &&
+        tab !== "reports"
       ) {
         setSearch("");
 
@@ -1720,6 +1755,9 @@ export default function AdminPanel() {
         minimum_stock:
           row.minimum_stock ?? 1,
 
+        purchase_price:
+          row.purchase_price ?? "",
+
         notes:
           row.notes || "",
       });
@@ -1981,7 +2019,8 @@ export default function AdminPanel() {
 
     if (
       tab !== "dashboard" &&
-      tab !== "appointments"
+      tab !== "appointments" &&
+      tab !== "reports"
     ) {
       await loadRows(
         tab,
@@ -2004,7 +2043,10 @@ export default function AdminPanel() {
           : tab === "inventory"
             ? "Envanter / Stok"
 
-            : "Genel Bakış";
+            : tab === "reports"
+              ? "Kasa / Raporlar"
+
+              : "Genel Bakış";
 
 
   return (
@@ -2266,6 +2308,14 @@ export default function AdminPanel() {
               }
               onChanged={
                 refreshEverything
+              }
+            />
+
+          ) : tab === "reports" ? (
+
+            <ReportsTab
+              onOpenProfile={
+                openProfile
               }
             />
 
@@ -2760,6 +2810,10 @@ export default function AdminPanel() {
                           </th>
 
                           <th>
+                            Alış Fiyatı
+                          </th>
+
+                          <th>
                             Stok
                           </th>
 
@@ -2810,6 +2864,12 @@ export default function AdminPanel() {
 
                                 <td>
                                   {row.category || "—"}
+                                </td>
+
+                                <td>
+                                  {formatPrice(
+                                    row.purchase_price
+                                  )}
                                 </td>
 
                                 <td
@@ -3918,7 +3978,7 @@ export default function AdminPanel() {
               ? "Stok Kaydını Düzenle"
               : "Envantere Yeni Ürün Ekle"
           }
-          subtitle="İşitme Cihazı kategorisindeki ürünler hasta kayıt ekranında otomatik görünür."
+          subtitle="Alış fiyatı raporlardaki brüt kâr hesabında kullanılır."
           onClose={
             () =>
               setModal(null)
@@ -4031,6 +4091,31 @@ export default function AdminPanel() {
                   )}
 
                 </select>
+
+              </Field>
+
+
+              <Field label="Birim Alış Fiyatı">
+
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={
+                    inventoryForm.purchase_price
+                  }
+                  onChange={
+                    (event) =>
+                      setInventoryForm({
+                        ...inventoryForm,
+
+                        purchase_price:
+                          event.target.value,
+                      })
+                  }
+                  placeholder="Örn. 12000"
+                  required
+                />
 
               </Field>
 
