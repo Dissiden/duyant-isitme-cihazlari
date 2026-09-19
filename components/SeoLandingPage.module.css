@@ -1,0 +1,870 @@
+.hero {
+  padding:
+    72px 20px 54px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f5fbfb 0%,
+      #ffffff 55%,
+      #f1f7ff 100%
+    );
+}
+
+
+.container {
+  width:
+    min(
+      1180px,
+      100%
+    );
+
+  margin:
+    0 auto;
+}
+
+
+.narrowContainer {
+  width:
+    min(
+      880px,
+      100%
+    );
+
+  margin:
+    0 auto;
+}
+
+
+.eyebrow {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  color:
+    #008b8b;
+
+  font-size:
+    .78rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    .03em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.hero h1 {
+  max-width:
+    900px;
+
+  margin:
+    14px 0 18px;
+
+  color:
+    #10233d;
+
+  font-size:
+    clamp(
+      2.25rem,
+      6vw,
+      4.6rem
+    );
+
+  line-height:
+    1.04;
+
+  letter-spacing:
+    -.045em;
+}
+
+
+.lead {
+  max-width:
+    780px;
+
+  margin:
+    0;
+
+  color:
+    #586b82;
+
+  font-size:
+    1.08rem;
+
+  line-height:
+    1.8;
+}
+
+
+.heroActions {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    11px;
+
+  margin-top:
+    27px;
+}
+
+
+.primaryButton,
+.whatsappButton,
+.lightButton,
+.outlineButton {
+  min-height:
+    46px;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    8px;
+
+  padding:
+    0 18px;
+
+  border-radius:
+    10px;
+
+  text-decoration:
+    none;
+
+  font-weight:
+    800;
+}
+
+
+.primaryButton {
+  color:
+    white;
+
+  background:
+    #00aaaa;
+}
+
+
+.whatsappButton {
+  color:
+    white;
+
+  background:
+    #128c7e;
+}
+
+
+.lightButton {
+  color:
+    #007f82;
+
+  background:
+    white;
+}
+
+
+.outlineButton {
+  color:
+    white;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .55
+    );
+}
+
+
+.trustRow {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    10px 18px;
+
+  margin-top:
+    23px;
+}
+
+
+.trustRow span {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    6px;
+
+  color:
+    #53667c;
+
+  font-size:
+    .8rem;
+
+  font-weight:
+    700;
+}
+
+
+.answerSection {
+  padding:
+    24px 20px 0;
+}
+
+
+.answerCard {
+  display:
+    grid;
+
+  grid-template-columns:
+    auto 1fr;
+
+  gap:
+    15px;
+
+  padding:
+    25px;
+
+  border:
+    1px solid
+    #dce9e9;
+
+  border-radius:
+    16px;
+
+  background:
+    #f8ffff;
+}
+
+
+.answerCard > span {
+  width:
+    45px;
+
+  height:
+    45px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  border-radius:
+    13px;
+
+  color:
+    #008b8b;
+
+  background:
+    #dff7f7;
+}
+
+
+.answerCard h2 {
+  margin:
+    0 0 8px;
+
+  color:
+    #183047;
+
+  font-size:
+    1.15rem;
+}
+
+
+.answerCard p {
+  margin:
+    0;
+
+  color:
+    #5e7185;
+
+  line-height:
+    1.75;
+}
+
+
+.section,
+.sectionSoft {
+  padding:
+    68px 20px;
+}
+
+
+.sectionSoft {
+  background:
+    #f7f9fc;
+}
+
+
+.sectionHead {
+  margin-bottom:
+    24px;
+}
+
+
+.sectionHead h2,
+.narrowContainer h2 {
+  margin:
+    0 0 18px;
+
+  color:
+    #142943;
+
+  font-size:
+    clamp(
+      1.65rem,
+      4vw,
+      2.5rem
+    );
+
+  line-height:
+    1.2;
+}
+
+
+.narrowContainer p {
+  color:
+    #5f7186;
+
+  font-size:
+    1rem;
+
+  line-height:
+    1.85;
+}
+
+
+.highlightGrid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    14px;
+}
+
+
+.highlightCard {
+  padding:
+    22px;
+
+  border:
+    1px solid
+    #e1e7ed;
+
+  border-radius:
+    14px;
+
+  background:
+    white;
+}
+
+
+.checkIcon {
+  color:
+    #00aaaa;
+}
+
+
+.highlightCard h2 {
+  margin:
+    13px 0 8px;
+
+  color:
+    #1b314a;
+
+  font-size:
+    1rem;
+}
+
+
+.highlightCard p {
+  margin:
+    0;
+
+  color:
+    #687a8f;
+
+  line-height:
+    1.7;
+
+  font-size:
+    .88rem;
+}
+
+
+.bulletList {
+  display:
+    grid;
+
+  gap:
+    11px;
+
+  margin:
+    22px 0;
+
+  padding:
+    0;
+
+  list-style:
+    none;
+}
+
+
+.bulletList li {
+  display:
+    flex;
+
+  align-items:
+    flex-start;
+
+  gap:
+    9px;
+
+  color:
+    #51657b;
+
+  line-height:
+    1.65;
+}
+
+
+.bulletList svg {
+  flex:
+    0 0 auto;
+
+  margin-top:
+    4px;
+
+  color:
+    #00aaaa;
+}
+
+
+.textLink {
+  display:
+    inline-block;
+
+  margin-top:
+    10px;
+
+  color:
+    #007f82;
+
+  font-weight:
+    800;
+
+  text-decoration:
+    none;
+}
+
+
+.faqGrid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    13px;
+}
+
+
+.faqCard {
+  padding:
+    22px;
+
+  border:
+    1px solid
+    #e1e6ed;
+
+  border-radius:
+    13px;
+
+  background:
+    white;
+}
+
+
+.faqCard h3 {
+  margin:
+    0 0 9px;
+
+  color:
+    #183047;
+
+  font-size:
+    .98rem;
+}
+
+
+.faqCard p {
+  margin:
+    0;
+
+  color:
+    #66798e;
+
+  line-height:
+    1.72;
+
+  font-size:
+    .88rem;
+}
+
+
+.sourceSection {
+  padding:
+    0 20px 60px;
+}
+
+
+.sourceBox {
+  display:
+    flex;
+
+  gap:
+    13px;
+
+  padding:
+    20px;
+
+  border:
+    1px solid
+    #dce4ec;
+
+  border-radius:
+    13px;
+
+  background:
+    white;
+
+  color:
+    #20364e;
+}
+
+
+.sourceBox svg {
+  flex:
+    0 0 auto;
+
+  color:
+    #008b8b;
+}
+
+
+.sourceBox p {
+  margin:
+    6px 0;
+
+  color:
+    #687b90;
+
+  line-height:
+    1.6;
+}
+
+
+.sourceBox a {
+  color:
+    #007f82;
+
+  font-weight:
+    800;
+
+  text-decoration:
+    none;
+}
+
+
+.relatedGrid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    13px;
+}
+
+
+.relatedCard {
+  display:
+    block;
+
+  padding:
+    20px;
+
+  border:
+    1px solid
+    #e1e6ed;
+
+  border-radius:
+    13px;
+
+  color:
+    inherit;
+
+  background:
+    white;
+
+  text-decoration:
+    none;
+}
+
+
+.relatedCard strong,
+.relatedCard span,
+.relatedCard small {
+  display:
+    block;
+}
+
+
+.relatedCard strong {
+  color:
+    #1c3148;
+}
+
+
+.relatedCard span {
+  margin-top:
+    7px;
+
+  color:
+    #687b90;
+
+  line-height:
+    1.6;
+
+  font-size:
+    .86rem;
+}
+
+
+.relatedCard small {
+  margin-top:
+    11px;
+
+  color:
+    #008b8b;
+
+  font-weight:
+    800;
+}
+
+
+.localSection {
+  padding:
+    30px 20px 70px;
+
+  background:
+    #f7f9fc;
+}
+
+
+.localCard {
+  display:
+    grid;
+
+  grid-template-columns:
+    auto 1fr;
+
+  gap:
+    18px;
+
+  padding:
+    30px;
+
+  border-radius:
+    18px;
+
+  color:
+    white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #006f72,
+      #00aaaa
+    );
+}
+
+
+.locationIcon {
+  width:
+    56px;
+
+  height:
+    56px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  border-radius:
+    15px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      .14
+    );
+}
+
+
+.localCard h2 {
+  margin:
+    0 0 10px;
+
+  font-size:
+    1.45rem;
+}
+
+
+.localCard p {
+  margin:
+    5px 0;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      .88
+    );
+
+  line-height:
+    1.65;
+}
+
+
+.localActions {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    10px;
+
+  margin-top:
+    18px;
+}
+
+
+@media (
+  max-width: 900px
+) {
+  .highlightGrid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+
+
+  .relatedGrid {
+    grid-template-columns:
+      1fr;
+  }
+}
+
+
+@media (
+  max-width: 650px
+) {
+  .hero {
+    padding-top:
+      45px;
+  }
+
+
+  .highlightGrid,
+  .faqGrid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .answerCard,
+  .localCard {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .heroActions,
+  .localActions {
+    flex-direction:
+      column;
+  }
+
+
+  .primaryButton,
+  .whatsappButton,
+  .lightButton,
+  .outlineButton {
+    width:
+      100%;
+  }
+}

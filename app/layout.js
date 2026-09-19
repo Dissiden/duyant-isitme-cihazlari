@@ -1,12 +1,21 @@
 import "./globals.css";
 
-import { site } from "@/lib/site";
+import {
+  site,
+} from "@/lib/site";
+
+import {
+  getGlobalSchema,
+} from "@/lib/seo-schema";
 
 import SiteChrome from "@/components/SiteChrome";
 
+
 export const metadata = {
   metadataBase:
-    new URL(site.url),
+    new URL(
+      site.url
+    ),
 
   title: {
     default:
@@ -17,37 +26,51 @@ export const metadata = {
   },
 
   description:
-    "Antalya Kepez DuyAnt İşitme Cihazları. İşitme cihazı seçimi, uygulama, ayar, bakım, teknik destek, pil ve aksesuar bilgileri.",
+    "Antalya Kepez'de Unitron ve Coselgi işitme cihazları, cihaz seçimi, fiyat bilgisi, ayar, bakım ve teknik servis desteği için DuyAnt'a ulaşın.",
 
   applicationName:
     site.name,
 
-  alternates: {
-    canonical: "/",
+  creator:
+    site.name,
+
+  publisher:
+    site.name,
+
+  icons: {
+    icon:
+      "/icon.svg",
   },
 
   openGraph: {
-    type: "website",
-    locale: "tr_TR",
-    url: site.url,
-    siteName: site.name,
+    type:
+      "website",
+
+    locale:
+      "tr_TR",
+
+    siteName:
+      site.name,
 
     title:
       "Antalya İşitme Cihazı | DuyAnt İşitme Cihazları",
 
     description:
-      "Antalya'da işitme cihazı seçimi, uygulama, ayar, bakım ve satış sonrası destek hakkında bilgi alın.",
+      "Antalya Kepez'de işitme cihazı seçimi, fiyat bilgisi, uygulama, ayar, bakım ve satış sonrası destek.",
 
     images: [
       {
         url:
           "/og/duyant-og.jpg",
 
-        width: 1200,
-        height: 630,
+        width:
+          1200,
+
+        height:
+          630,
 
         alt:
-          "DuyAnt İşitme Cihazları Antalya",
+          "DuyAnt İşitme Cihazları Antalya Kepez",
       },
     ],
   },
@@ -57,10 +80,10 @@ export const metadata = {
       "summary_large_image",
 
     title:
-      "Antalya İşitme Cihazı | DuyAnt",
+      "Antalya İşitme Cihazı | DuyAnt İşitme Cihazları",
 
     description:
-      "DuyAnt İşitme Cihazları Antalya Kepez. İşitme cihazı seçimi, ayar, bakım ve destek.",
+      "Antalya Kepez'de işitme cihazı seçimi, fiyat bilgisi, ayar, bakım ve teknik servis desteği.",
 
     images: [
       "/og/duyant-og.jpg",
@@ -68,36 +91,63 @@ export const metadata = {
   },
 
   robots: {
-    index: true,
-    follow: true,
+    index:
+      true,
+
+    follow:
+      true,
 
     googleBot: {
-      index: true,
-      follow: true,
+      index:
+        true,
+
+      follow:
+        true,
 
       "max-image-preview":
         "large",
 
-      "max-snippet": -1,
+      "max-snippet":
+        -1,
 
       "max-video-preview":
         -1,
     },
   },
 
-  category: "health",
+  category:
+    "health",
 };
+
 
 export default function RootLayout({
   children,
 }) {
+  const schema =
+    getGlobalSchema();
+
+
   return (
     <html lang="tr">
+
       <body>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html:
+              JSON.stringify(
+                schema
+              ),
+          }}
+        />
+
         <SiteChrome>
           {children}
         </SiteChrome>
+
       </body>
+
     </html>
   );
 }
