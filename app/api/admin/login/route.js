@@ -3,25 +3,44 @@ import {
 } from "next/server";
 
 import {
-  COOKIE_NAME,
+  ADMIN_COOKIE_NAME,
   getAdminCookieValue,
-  isPasswordValid,
+  hasAdminPassword,
+  verifyAdminPassword,
 } from "@/lib/admin-auth";
+
 
 export async function POST(
   request
 ) {
   try {
+    if (
+      !hasAdminPassword()
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "ADMIN_PASSWORD sunucuda tanımlı değil. Vercel Environment Variables ayarını kontrol edin.",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+
     const body =
       await request.json();
 
+
     const password =
       String(
-        body?.password || ""
+        body.password ?? ""
       );
 
+
     if (
-      !isPasswordValid(
+      !verifyAdminPassword(
         password
       )
     ) {
@@ -36,29 +55,16 @@ export async function POST(
       );
     }
 
-    const token =
-      getAdminCookieValue();
-
-    if (!token) {
-      return NextResponse.json(
-        {
-          error:
-            "ADMIN_PASSWORD tanımlı değil.",
-        },
-        {
-          status: 500,
-        }
-      );
-    }
 
     const response =
       NextResponse.json({
-        ok: true,
+        success: true,
       });
 
+
     response.cookies.set(
-      COOKIE_NAME,
-      token,
+      ADMIN_COOKIE_NAME,
+      getAdminCookieValue(),
       {
         httpOnly: true,
 
@@ -71,16 +77,26 @@ export async function POST(
         path: "/",
 
         maxAge:
-          60 * 60 * 12,
+          60 *
+          60 *
+          12,
       }
     );
 
+
     return response;
-  } catch {
+
+  } catch (error) {
+    console.error(
+      "Admin login error:",
+      error
+    );
+
+
     return NextResponse.json(
       {
         error:
-          "Giriş işlemi tamamlanamadı.",
+          "Giriş sırasında bir hata oluştu.",
       },
       {
         status: 500,

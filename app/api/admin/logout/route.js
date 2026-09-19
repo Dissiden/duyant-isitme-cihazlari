@@ -3,17 +3,19 @@ import {
 } from "next/server";
 
 import {
-  COOKIE_NAME,
+  ADMIN_COOKIE_NAME,
 } from "@/lib/admin-auth";
+
 
 export async function POST() {
   const response =
     NextResponse.json({
-      ok: true,
+      success: true,
     });
 
+
   response.cookies.set(
-    COOKIE_NAME,
+    ADMIN_COOKIE_NAME,
     "",
     {
       httpOnly: true,
@@ -27,8 +29,12 @@ export async function POST() {
       path: "/",
 
       maxAge: 0,
+
+      expires:
+        new Date(0),
     }
   );
+
 
   return response;
 }
