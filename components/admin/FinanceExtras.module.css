@@ -1,0 +1,474 @@
+.financialGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.financialGrid article {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid #e6ebf2;
+  border-radius: 13px;
+  background: #ffffff;
+}
+
+.financialGrid article > span {
+  display: block;
+  color: #73819a;
+  font-size: .64rem;
+}
+
+.financialGrid article > strong {
+  display: block;
+  margin-top: 6px;
+  color: #172033;
+  font-size: 1.02rem;
+  overflow-wrap: anywhere;
+}
+
+.financialGrid article > small {
+  display: block;
+  margin-top: 4px;
+  color: #73819a;
+  font-size: .62rem;
+}
+
+.overpaymentAlert {
+  padding: 14px 16px;
+  border: 1px solid #f3b5b5;
+  border-radius: 12px;
+  color: #991b1b;
+  background: #fff1f1;
+  font-size: .73rem;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.selectedPromiseNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 11px 12px;
+  border: 1px solid #c9ddf6;
+  border-radius: 10px;
+  color: #215f9f;
+  background: #f1f7ff;
+  font-size: .69rem;
+  line-height: 1.45;
+}
+
+.selectedPromiseNotice button {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid #bfd6f2;
+  border-radius: 8px;
+  color: #215f9f;
+  background: white;
+  font-size: .63rem;
+  font-weight: 800;
+}
+
+.paymentEditBox {
+  display: grid;
+  gap: 9px;
+  margin: 10px 0 18px;
+  padding: 14px;
+  border: 1px solid #dfe5ec;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.paymentEditBox > strong {
+  font-size: .73rem;
+}
+
+.paymentEditBox input,
+.paymentEditBox select {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 10px;
+  outline: none;
+  border: 1px solid #dbe3ed;
+  border-radius: 9px;
+  color: #172033;
+  background: white;
+  font-size: .7rem;
+}
+
+.paymentEditBox input:focus,
+.paymentEditBox select:focus {
+  border-color: #1d73e8;
+  box-shadow: 0 0 0 3px rgba(29, 115, 232, .08);
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.miniButton,
+.receiptButton,
+.dangerButton,
+.successButton,
+.ghostButton {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: .63rem;
+  font-weight: 800;
+}
+
+.miniButton,
+.receiptButton,
+.ghostButton {
+  border: 1px solid #d9e3ef;
+  color: #40536f;
+  background: white;
+}
+
+.receiptButton {
+  color: #1665b5;
+}
+
+.successButton {
+  border: 1px solid #bde7d4;
+  color: #087f55;
+  background: #effaf5;
+}
+
+.dangerButton {
+  border: 1px solid #f3c4c4;
+  color: #b42318;
+  background: #fff7f7;
+}
+
+.miniButton:disabled,
+.receiptButton:disabled,
+.dangerButton:disabled,
+.successButton:disabled,
+.ghostButton:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.costHelp {
+  margin: 10px 0 0;
+  color: #667085;
+  font-size: .62rem;
+  line-height: 1.5;
+}
+
+.promiseCard {
+  grid-column: 1 / -1;
+}
+
+.promiseTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .8fr) minmax(0, 1.4fr) auto;
+  gap: 9px;
+  margin-bottom: 16px;
+}
+
+.promiseTop input {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 10px;
+  outline: none;
+  border: 1px solid #dbe3ed;
+  border-radius: 9px;
+  color: #172033;
+  background: white;
+  font-size: .7rem;
+}
+
+.promiseTop input:focus {
+  border-color: #1d73e8;
+  box-shadow: 0 0 0 3px rgba(29, 115, 232, .08);
+}
+
+.promiseList {
+  display: grid;
+  gap: 8px;
+}
+
+.promiseRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 13px;
+  border: 1px solid #e7ebf0;
+  border-radius: 11px;
+  background: #fbfcfe;
+}
+
+.promiseMain {
+  min-width: 0;
+}
+
+.promiseMain strong {
+  display: block;
+  color: #24324a;
+  font-size: .73rem;
+}
+
+.promiseMain span {
+  display: block;
+  margin-top: 4px;
+  color: #73819a;
+  font-size: .62rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.promiseMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.status {
+  display: inline-flex !important;
+  align-items: center;
+  min-height: 23px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: .59rem !important;
+  font-weight: 850;
+}
+
+.statusWaiting {
+  color: #1761ac !important;
+  background: #e6f1ff;
+}
+
+.statusToday {
+  color: #087f55 !important;
+  background: #e1f6eb;
+}
+
+.statusLate {
+  color: #b42318 !important;
+  background: #fff0f0;
+}
+
+.statusPaid {
+  color: #087f55 !important;
+  background: #dff6eb;
+}
+
+.statusCanceled {
+  color: #647184 !important;
+  background: #edf0f4;
+}
+
+.promiseActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.promiseEdit {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr auto;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #edf0f4;
+}
+
+.promiseEdit input {
+  min-width: 0;
+  height: 38px;
+  padding: 0 9px;
+  outline: none;
+  border: 1px solid #dbe3ed;
+  border-radius: 8px;
+  background: white;
+  font-size: .68rem;
+}
+
+.collectionsCard {
+  grid-column: 1 / -1;
+}
+
+.collectionsSummary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 13px;
+}
+
+.collectionsSummary article {
+  padding: 12px;
+  border: 1px solid #e6ebf2;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.collectionsSummary article.danger {
+  border-color: #f2d0d0;
+  background: #fff7f7;
+}
+
+.collectionsSummary span {
+  display: block;
+  color: #73819a;
+  font-size: .6rem;
+}
+
+.collectionsSummary strong {
+  display: block;
+  margin-top: 4px;
+  color: #172033;
+  font-size: .85rem;
+}
+
+.collectionSection + .collectionSection {
+  margin-top: 13px;
+}
+
+.collectionSectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+  color: #40516a;
+  font-size: .68rem;
+  font-weight: 850;
+}
+
+.collectionList {
+  display: grid;
+  gap: 7px;
+}
+
+.collectionRow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 12px;
+  border: 1px solid #e5eaf0;
+  border-radius: 10px;
+  color: #172033;
+  background: #fafbfd;
+  text-align: left;
+}
+
+.collectionRow:hover {
+  border-color: #c6dbf4;
+  background: #f4f9ff;
+}
+
+.collectionRowLate {
+  border-color: #f0d1d1;
+  background: #fffafa;
+}
+
+.collectionPatient strong,
+.collectionAmount strong {
+  display: block;
+  font-size: .72rem;
+}
+
+.collectionPatient small,
+.collectionAmount small {
+  display: block;
+  margin-top: 3px;
+  color: #73819a;
+  font-size: .61rem;
+}
+
+.collectionDate {
+  color: #526683;
+  font-size: .64rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.collectionsEmpty {
+  padding: 16px 0;
+  color: #73819a;
+  font-size: .69rem;
+}
+
+.refreshButton {
+  min-height: 31px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 9px;
+  border: 1px solid #d9e3ef;
+  border-radius: 8px;
+  color: #40536f;
+  background: white;
+  font-size: .62rem;
+  font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+  .financialGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .collectionsSummary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .promiseTop,
+  .promiseEdit {
+    grid-template-columns: 1fr;
+  }
+
+  .promiseRow {
+    grid-template-columns: 1fr;
+  }
+
+  .promiseActions {
+    justify-content: flex-start;
+  }
+
+  .collectionRow {
+    grid-template-columns: 1fr auto;
+  }
+
+  .collectionDate {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .financialGrid,
+  .collectionsSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .selectedPromiseNotice {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .collectionRow {
+    grid-template-columns: 1fr;
+  }
+
+  .collectionDate {
+    grid-column: auto;
+  }
+}

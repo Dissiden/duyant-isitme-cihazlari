@@ -30,6 +30,7 @@ import {
 import PatientProfileModal from "@/components/admin/PatientProfileModal";
 import AppointmentsTab from "@/components/admin/AppointmentsTab";
 import TodayAppointmentsCard from "@/components/admin/TodayAppointmentsCard";
+import TodayCollectionsCard from "@/components/admin/TodayCollectionsCard";
 import ReportsTab from "@/components/admin/ReportsTab";
 
 
@@ -394,6 +395,7 @@ function Dashboard({
   openProfile,
   openRepair,
   openInventory,
+  collectionsRefreshKey,
 }) {
   if (
     loading &&
@@ -624,6 +626,16 @@ function Dashboard({
           }
           refreshKey={
             data.totals.todayAppointments
+          }
+        />
+
+
+        <TodayCollectionsCard
+          onOpenProfile={
+            openProfile
+          }
+          refreshKey={
+            collectionsRefreshKey
           }
         />
 
@@ -1317,6 +1329,13 @@ export default function AdminPanel() {
     setSummaryLoading,
   ] =
     useState(true);
+
+
+  const [
+    collectionsRefreshKey,
+    setCollectionsRefreshKey,
+  ] =
+    useState(0);
 
 
   const [
@@ -2027,6 +2046,12 @@ export default function AdminPanel() {
         search
       );
     }
+
+
+    setCollectionsRefreshKey(
+      (current) =>
+        current + 1
+    );
   }
 
 
@@ -2297,6 +2322,9 @@ export default function AdminPanel() {
               openInventory={
                 () =>
                   openInventory()
+              }
+              collectionsRefreshKey={
+                collectionsRefreshKey
               }
             />
 
